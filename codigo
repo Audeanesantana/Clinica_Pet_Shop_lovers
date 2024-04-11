@@ -1,0 +1,66 @@
+-- Criação da tabela Tutor
+CREATE TABLE Tutor (
+    TutorID INT PRIMARY KEY IDENTITY(1,1),
+    Nome VARCHAR(50) NOT NULL,
+    CPF VARCHAR(14) NOT NULL,
+    Telefone VARCHAR(15) NOT NULL,
+    Email VARCHAR(50) NOT NULL
+);
+
+-- Criação da tabela Animal
+CREATE TABLE Animal (
+    AnimalID INT PRIMARY KEY IDENTITY(1,1),
+    Nome VARCHAR(50) NOT NULL,
+    Especie VARCHAR(20) NOT NULL,
+    Raca VARCHAR(20) NOT NULL,
+    TutorID INT FOREIGN KEY REFERENCES Tutor(TutorID)
+);
+
+-- Criação da tabela FormaPagamento
+CREATE TABLE FormaPagamento (
+    FormaPagamentoID INT PRIMARY KEY IDENTITY(1,1),
+    Descricao VARCHAR(50) NOT NULL
+);
+
+-- Criação da tabela Procedimento
+CREATE TABLE Procedimento (
+    ProcedimentoID INT PRIMARY KEY IDENTITY(1,1),
+    Descricao VARCHAR(50) NOT NULL,
+    Valor DECIMAL(10,2) NOT NULL
+);
+
+-- Criação da tabela Atendimento
+CREATE TABLE Atendimento (
+    AtendimentoID INT PRIMARY KEY IDENTITY(1,1),
+    DataAtendimento DATETIME NOT NULL,
+    AnimalID INT FOREIGN KEY REFERENCES Animal(AnimalID),
+    FormaPagamentoID INT FOREIGN KEY REFERENCES FormaPagamento(FormaPagamentoID),
+    ProcedimentoID INT FOREIGN KEY REFERENCES Procedimento(ProcedimentoID)
+);
+
+-- Exemplo de inserção de dados
+INSERT INTO Tutor (Nome, CPF, Telefone, Email)
+VALUES ('João Silva', '123.456.789-00', '(61) 98765-4321', 'joaosilva@email.com');
+
+INSERT INTO Animal (Nome, Especie, Raca, TutorID)
+VALUES ('Rex', 'Cachorro', 'Labrador Retriever', 1);
+
+INSERT INTO FormaPagamento (Descricao)
+VALUES ('Dinheiro');
+
+INSERT INTO Procedimento (Descricao, Valor)
+VALUES ('Consulta', 100.00);
+
+INSERT INTO Atendimento (DataAtendimento, AnimalID, FormaPagamentoID, ProcedimentoID)
+VALUES ('2024-04-11', 1, 1, 1);
+SELECT 
+    t.Nome AS Tutor,
+    a.Nome AS Animal,
+    fp.Descricao AS FormaPagamento,
+    p.Descricao AS Procedimento,
+    a.DataAtendimento
+FROM Atendimento a
+INNER JOIN Animal a ON a.AnimalID = a.AnimalID
+INNER JOIN Tutor t ON t.TutorID = a.TutorID
+INNER JOIN FormaPagamento fp ON fp.FormaPagamentoID = a.FormaPagamentoID
+INNER JOIN Procedimento p ON p.ProcedimentoID = a.ProcedimentoID;
